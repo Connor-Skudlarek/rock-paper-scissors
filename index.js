@@ -94,29 +94,34 @@ function checkScore(player, computer) {
 //   return finalScore;
 // }
 
-function updatePlayerScore(result) {
+function updateScore(result) {
   if (result == "You won!") {
-    return 1;
-  } else {
-    return 0;
+    playerScore += 1
+  } else if (result == "You lose!"){
+    computerScore += 1
   }
 }
 
 
 let playerScore = 0;
 let totalGames = 0;
+let computerScore = 0;
+
 
 const rockButton = document.querySelector(".rock-button");
 rockButton.addEventListener("click", function () {
   let roundResult = playRound(getComputerChoice(), rockButton.textContent);
   let roundResultDiv = document.querySelector(".round-results");
   let currentScore = document.querySelector(".score-tracker");
-  playerScore += updatePlayerScore(roundResult);
+  let scoreBoard = document.querySelector(".games-until-over");
+  updateScore(roundResult);
   totalGames++;
+  let remainingGames = checkGameOver(playerScore, computerScore, totalGames)
   currentScore.textContent =
     "Current score is: " + playerScore + ". Total games: " + totalGames + ".";
 
   roundResultDiv.textContent = roundResult;
+  scoreBoard.textContent = remainingGames;
 });
 
 const paperButton = document.querySelector(".paper-button");
@@ -124,12 +129,15 @@ paperButton.addEventListener("click", function () {
   let roundResult = playRound(getComputerChoice(), paperButton.textContent);
   let roundResultDiv = document.querySelector(".round-results");
   let currentScore = document.querySelector(".score-tracker");
-  playerScore += updatePlayerScore(roundResult);
+  let scoreBoard = document.querySelector(".games-until-over");
+  updateScore(roundResult);
   totalGames++;
+  let remainingGames = checkGameOver(playerScore, computerScore, totalGames)
   currentScore.textContent =
     "Current score is: " + playerScore + ". Total games: " + totalGames + ".";
 
   roundResultDiv.textContent = roundResult;
+  scoreBoard.textContent = remainingGames;
 });
 
 const scissorsButton = document.querySelector(".scissors-button");
@@ -137,17 +145,31 @@ scissorsButton.addEventListener("click", function () {
   let roundResult = playRound(getComputerChoice(), scissorsButton.textContent);
   let roundResultDiv = document.querySelector(".round-results");
   let currentScore = document.querySelector(".score-tracker");
-  playerScore += updatePlayerScore(roundResult);
+  let scoreBoard = document.querySelector(".games-until-over");
+  updateScore(roundResult);
   totalGames++;
+  let remainingGames = checkGameOver(playerScore, computerScore, totalGames)
   currentScore.textContent =
     "Current score is: " + playerScore + ". Total games: " + totalGames + ".";
 
   roundResultDiv.textContent = roundResult;
+  scoreBoard.textContent = remainingGames;
 });
 
-function checkGameOver(games){
+function checkGameOver(playerScore, computerScore, games){
+  if (games > 5){
+    return "The games are already over, but you can keep playing!"
+  }
   if (games == 5){
-    // If games is 5, then there is a winner if playerScore is greater than computerScore
-    // Currently missing a computerScore to compare, need to add before continuing
+    if (playerScore > computerScore){
+      return "You win the games!"
+    } else if (playerScore == computerScore) {
+      return "You tied in the games!"
+    } else {
+      return "You lost the games!"
+    }
+  } else {
+    let remainingGames = "There is still " + (5-games) + " more to go before a winner is called.";
+    return remainingGames;
   }
 }
